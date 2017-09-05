@@ -22,11 +22,29 @@ _RHYTHM_OFFSET	EQU		%00001000	; 8 frames of rhythm offset
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; OAM Memory locations
 
-;Sprite 0
+;Sprite 0 (top left corner of A button)
 _SPR0_Y		EQU			_OAMRAM   	; y position
 _SPR0_X		EQU			_OAMRAM+1	; x position
 _SPR0_NUM	EQU			_OAMRAM+2	; tile number
 _SPR0_ATT	EQU			_OAMRAM+3	; sprite atttributes
+
+;Sprite 1 (top right corner of A button)
+_SPR1_Y		EQU			_OAMRAM+4   ; y position
+_SPR1_X		EQU			_OAMRAM+5	; x position
+_SPR1_NUM	EQU			_OAMRAM+6	; tile number
+_SPR1_ATT	EQU			_OAMRAM+7	; sprite atttributes
+
+;Sprite 2 (bottom left corner of A button)
+_SPR2_Y		EQU			_OAMRAM+8   ; y position
+_SPR2_X		EQU			_OAMRAM+9	; x position
+_SPR2_NUM	EQU			_OAMRAM+10	; tile number
+_SPR2_ATT	EQU			_OAMRAM+11	; sprite atttributes
+
+;Sprite 3 (bottom right corner of A button)
+_SPR3_Y		EQU			_OAMRAM+12  ; y position
+_SPR3_X		EQU			_OAMRAM+13	; x position
+_SPR3_NUM	EQU			_OAMRAM+14	; tile number
+_SPR3_ATT	EQU			_OAMRAM+15	; sprite atttributes
 
 ; TODO: Sprites [1-39] go here as needed
 
@@ -38,14 +56,19 @@ _SPR0_ATT	EQU			_OAMRAM+3	; sprite atttributes
 _RAM_BLOCK_0	EQU		_RAM	;RAM is 8K without bank switching
 
 padInput		EQU		_RAM_BLOCK_0		;Read input into here
-player0X		EQU		_RAM_BLOCK_0+1		;player 0's world x pos
-player0Y		EQU		_RAM_BLOCK_0+2		;player 0's world y pos
-screenX			EQU		_RAM_BLOCK_0+3		;camera x
-screenY			EQU		_RAM_BLOCK_0+4		;camera y
-timer			EQU		_RAM_BLOCK_0+5		;global timer
-padTime			EQU		_RAM_BLOCK_0+6		;time at which padInput happened
-score			EQU		_RAM_BLOCK_0+7		;player score
-
+circle0X		EQU		_RAM_BLOCK_0+1		;player 0's world x pos
+circle0Y		EQU		_RAM_BLOCK_0+2		;player 0's world y pos
+circle1X		EQU		_RAM_BLOCK_0+3
+circle1Y		EQU		_RAM_BLOCK_0+4
+circle2X		EQU		_RAM_BLOCK_0+5
+circle2Y		EQU		_RAM_BLOCK_0+6
+circle3X		EQU		_RAM_BLOCK_0+7
+circle3Y		EQU		_RAM_BLOCK_0+8
+screenX			EQU		_RAM_BLOCK_0+9		;camera x
+screenY			EQU		_RAM_BLOCK_0+10		;camera y
+timer			EQU		_RAM_BLOCK_0+11		;global timer
+padTime			EQU		_RAM_BLOCK_0+12		;time at which padInput happened
+score			EQU		_RAM_BLOCK_0+13		;player score
 ; TODO: Additional variables
 
 _RAM_BLOCK_1	EQU		_RAM+128
@@ -119,17 +142,53 @@ start:
 	ld	l, 0			; put everything to zero
 	call	FillMemory	; Unused sprites remain off-screen
 	
-	; Now we wil create the sprites
-	ld	a, 64
-	ld	[player0Y], a
+	; Top left corner A button sprite
+	ld	a, 64 			; starting position y
+	ld	[circle0Y], a
 	ld	[_SPR0_Y], a	; y position of sprite
-	ld	a, 64
-	ld	[player0X], a
+	ld	a, 128			; starting position x
+	ld	[circle0X], a
 	ld	[_SPR0_X], a	; x position of sprite
-	ld	a, 1			; select sprite 1 (smiley)
+	ld	a, 10			; select sprite
 	ld	[_SPR0_NUM], a	; load a into contents of _SPR0_NUM
 	ld	a, 16
 	ld	[_SPR0_ATT], a	; special attribute, pallet 1
+	
+	; Top right corner A button sprite
+	ld	a, 64 			; starting position y
+	ld	[circle1Y], a
+	ld	[_SPR1_Y], a	; y position of sprite
+	ld	a, 136			; starting position x
+	ld	[circle1X], a
+	ld	[_SPR1_X], a	; x position of sprite
+	ld	a, 11			; select sprite
+	ld	[_SPR1_NUM], a	; load a into contents of _SPR1_NUM
+	ld	a, 16
+	ld	[_SPR1_ATT], a	; special attribute, pallet 1
+	
+	; Bottom left corner A button sprite
+	ld	a, 72 			; starting position y
+	ld	[circle2Y], a
+	ld	[_SPR2_Y], a	; y position of sprite
+	ld	a, 128			; starting position x
+	ld	[circle2X], a
+	ld	[_SPR2_X], a	; x position of sprite
+	ld	a, 12			; select sprite
+	ld	[_SPR2_NUM], a	; load a into contents of _SPR2_NUM
+	ld	a, 16
+	ld	[_SPR2_ATT], a	; special attribute, pallet 1
+	
+	; Bottom right corner A button sprite
+	ld	a, 72 			; starting position y
+	ld	[circle3Y], a
+	ld	[_SPR3_Y], a	; y position of sprite
+	ld	a, 136			; starting position x
+	ld	[circle3X], a
+	ld	[_SPR3_X], a	; x position of sprite
+	ld	a, 13			; select sprite
+	ld	[_SPR3_NUM], a	; load a into contents of _SPR3_NUM
+	ld	a, 16
+	ld	[_SPR3_ATT], a	; special attribute, pallet 1
 	
 	; Configure the screen
 	ld 	a, 64
@@ -160,6 +219,7 @@ start:
 	call 	UpdateTimer
 	call	HandleTimer
 	call 	Movement
+	call 	MoveCircle
 	;call	Collision
 	;call	DoMovement
 	
@@ -173,18 +233,36 @@ start:
 ; Render code (1140 clock cycles)
 .Render
 
-	;Update the player x and y position in OAM
-	ld 	a, [player0X]
+	;Update the circle x and y position in OAM
+	ld 	a, [circle0X]
 	ld 	[_SPR0_X], a
 	
-	ld 	a, [player0Y]
+	ld 	a, [circle0Y]
 	ld 	[_SPR0_Y], a
 	
-	ld	a, [screenX]
-	ld [rSCX], a
+	ld  a, [circle1X]
+	ld	[_SPR1_X], a
 	
-	ld	a, [screenY]
-	ld [rSCY], a
+	ld	a, [circle1Y]
+	ld	[_SPR1_Y], a
+	
+	ld  a, [circle2X]
+	ld	[_SPR2_X], a
+	
+	ld	a, [circle2Y]
+	ld	[_SPR2_Y], a
+	
+	ld  a, [circle3X]
+	ld	[_SPR3_X], a
+	
+	ld	a, [circle3Y]
+	ld	[_SPR3_Y], a
+	
+	;ld	a, [screenX]
+	;ld [rSCX], a
+	
+	;ld	a, [screenY]
+	;ld [rSCY], a
 	
 	; a small delay to guarantee we're out of VBlank
 	ld		bc, 1200
@@ -272,93 +350,115 @@ StartScreen:
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Move the player position based on pad input
-Movement:
-	ld		a, [padInput]	; load status of pad
-	ld		b, a			; Save in b so we can reset easily
+MoveCircle:
+;	ld		a, [padInput]	; load status of pad
+;	ld		b, a			; Save in b so we can reset easily
 
-	cp		0				; Return if we have no input
-	jr		nz, .CheckMovement
-	ret
+;	cp		0				; Return if we have no input
+;	jr		nz, .CheckMovement
+;	ret
 
-.CheckMovement
+;.CheckMovement
 
-	ld 		a, b
-	cp 		a,0
-	and		_PAD_RIGHT
-	call	nz, MoveRight
+;	ld 		a, b
+;	cp 		a,0
+;	and		_PAD_RIGHT
+;	call	nz, MoveRight
 
-	ld		a, b
-	and		_PAD_LEFT
-	call	nz, MoveLeft
+;	ld		a, b
+;	and		_PAD_LEFT
+;	call	nz, MoveLeft
 
-	ld		a, b
-	and		_PAD_UP
-	call	nz, MoveUp
+;	ld		a, b
+;	and		_PAD_UP
+;	call	nz, MoveUp
 
-	ld		a, b
-	and		_PAD_DOWN
-	call	nz, MoveDown
-	ret
+;	ld		a, b
+;	and		_PAD_DOWN
+;	call	nz, MoveDown
+;	ret
 
-MoveLeft:
-	ld		a, [player0X]
-	cp		a, 32
-	jp		z, .LeftScreen
-.LeftPlayer:
+;MoveLeft:
+	ld		a, [circle0X]
+	cp		a, 24
+	jp		z, .Stop
 	dec		a
-	ld		[player0X], a
-	ret
-.LeftScreen:
-	;Move the screen instead of the player
-	ld 		a, [screenX]
+	ld		[circle0X], a
+	
+	ld		a, [circle1X]
 	dec		a
-	ld		[screenX], a
-	ret
-
-MoveRight:
-	ld		a, [player0X]
-	cp		a, 136
-	jp		z, .RightScreen
-.RightPlayer:
-	inc		a
-	ld		[player0X], a
-	ret
-.RightScreen:
-	;Move the screen instead of the player
-	ld 		a, [screenX]
-	inc		a
-	ld		[screenX], a
-	ret
-
-MoveUp:
-	ld		a, [player0Y]
-	cp		a, 32
-	jp		z, .UpScreen
-.UpPlayer:
+	ld		[circle1X], a
+	
+	ld		a, [circle2X]
 	dec		a
-	ld		[player0Y], a
-	ret
-.UpScreen:
-	;Move the screen instead of the player
-	ld 		a, [screenY]
+	ld		[circle2X], a
+	
+	ld		a, [circle3X]
 	dec		a
-	ld		[screenY], a
+	ld		[circle3X], a
+	;jp		z, .OffScreen
 	ret
+	
+.Stop
+	ret
+;.LeftPlayer:
+;	dec		a
+;	ld		[player0X], a
+;	ret
+;.OffScreen:
+;	ld		a, [circle0X]
+;	ret
+;.LeftScreen:
+;	;Move the screen instead of the player
+;	ld 		a, [screenX]
+;	dec		a
+;	ld		[screenX], a
+;	ret
 
-MoveDown:
-	ld		a, [player0Y]
-	cp		a, 136
-	jp		z, .DownScreen
-.DownPlayer:
-	inc		a
-	ld		[player0Y], a
-	ret
-.DownScreen:
+;MoveRight:
+;	ld		a, [player0X]
+;	cp		a, 136
+;	jp		z, .RightScreen
+;.RightPlayer:
+;	inc		a
+;	ld		[player0X], a
+;	ret
+;.RightScreen:
+;	;Move the screen instead of the player
+;	ld 		a, [screenX]
+;	inc		a
+;	ld		[screenX], a
+;	ret
+
+;MoveUp:
+;	ld		a, [player0Y]
+;	cp		a, 32
+;	jp		z, .UpScreen
+;.UpPlayer:
+;	dec		a
+;	ld		[player0Y], a
+;	ret
+;.UpScreen:
 	;Move the screen instead of the player
-	ld 		a, [screenY]
-	inc		a
-	ld		[screenY], a
-	ret
+;	ld 		a, [screenY]
+;	dec		a
+;	ld		[screenY], a
+;	ret
+
+;MoveDown:
+;	ld		a, [player0Y]
+;	cp		a, 136
+;	jp		z, .DownScreen
+;.DownPlayer:
+;	inc		a
+;	ld		[player0Y], a
+;	ret
+;.DownScreen:
+	;Move the screen instead of the player
+;	ld 		a, [screenY]
+;	inc		a
+;	ld		[screenY], a
+;	ret
 
 UpdatePadTime:
 	ld		a, [timer]	; padTimer = timer
@@ -475,12 +575,12 @@ Delay:
 ; Included tiles, maps and windows
 
 Tiles:
-INCLUDE "Tiles.z80"
+INCLUDE "NewTiles.z80"
 EndTiles:
 
 ; screen size 20x17
 Map:
-INCLUDE"Map.z80"
+INCLUDE "Map.z80"
 EndMap:
 
 Window:
