@@ -17,6 +17,8 @@ _PAD_LEFT		EQU		%00100000
 _PAD_UP			EQU		%01000000
 _PAD_DOWN		EQU		%10000000
 
+_RHYTHM_OFFSET	EQU		%00001000	; 8 frames of rhythm offset
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; OAM Memory locations
 
@@ -40,6 +42,10 @@ player0X		EQU		_RAM_BLOCK_0+1		;player 0's world x pos
 player0Y		EQU		_RAM_BLOCK_0+2		;player 0's world y pos
 screenX			EQU		_RAM_BLOCK_0+3		;camera x
 screenY			EQU		_RAM_BLOCK_0+4		;camera y
+timer			EQU		_RAM_BLOCK_0+5		;global timer
+padTime			EQU		_RAM_BLOCK_0+6		;time at which padInput happened
+score			EQU		_RAM_BLOCK_0+7		;player score
+
 ; TODO: Additional variables
 
 _RAM_BLOCK_1	EQU		_RAM+128
@@ -137,6 +143,12 @@ start:
 	; configure and activate LCD (see gbhw.inc line 70-85)
 	ld		a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON|LCDCF_WIN9C00
 	ld		[rLCDC], a
+
+	; zero timer
+	ld	a, 0
+	ld	[timer], a
+	ld	a, 0
+	ld	[padTime], a
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Gameplay loop
@@ -144,10 +156,13 @@ start:
 
 	call	StartScreen
 	call	ReadPad
+	;call	UpdatePadTime
+	call 	UpdateTimer
+	call	HandleTimer
 	call 	Movement
 	;call	Collision
 	;call	DoMovement
-
+	
 	; Wait until we are in VBlank
 .wait
 	ld a, [rSTAT]
@@ -343,6 +358,44 @@ MoveDown:
 	ld 		a, [screenY]
 	inc		a
 	ld		[screenY], a
+	ret
+
+UpdatePadTime:
+	ld		a, [timer]	; padTimer = timer
+	ld		[padTime], a
+	; ld		a,	60
+	; ld		b, [padTimer]
+	; sub		b					; Find difference between timer and when pad input was done
+	; and		%01111111, b		; Change sign bit to positive
+	; ld		a, b				; Load the result into A
+	; cp		_RHYTHM_OFFSET		; Do a compare
+	; jp		z, .HandleScore		; If difference = _RHYTHM_OFFSET, set perfect score
+	; jp		c, .HandleScoreSub	; If difference < _RHYTHM_OFFSET, set suboptimal score
+	; jp		.HandleScoreBad		; Else we did a goof ):
+	ret							
+
+UpdateTimer:
+	ld		a, [timer]
+	inc		a
+	ld		[timer], a
+	ret
+
+HandleTimer:
+	ld		a, [timer]
+	cp		60
+	jp		z, .HandleBeat
+	ret
+
+.HandleBeat:
+	ld		a, 0
+	ld		[timer], a
+	;call	functions here
+	call	MoveLeft
+	;call	.MetronomeBeat
+	ret
+
+.MetronomeBeat:
+	; do sound stuff here
 	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

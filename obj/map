@@ -1,33 +1,36 @@
 Bank #0 (HOME):
-  SECTION: $0100-$02EB ($01EC bytes)
+  SECTION: $0100-$031D ($021E bytes)
            $0150 = start
-           $02B8 = StopLCD
-           $02EC = Tiles
-           $02D9 = CopyMemory
-           $02CF = FillMemory
-           $0215 = StartScreen
-           $01F0 = ReadPad
-           $0240 = Movement
-           $02E3 = Delay
-           $01C0 = start.GameLoop
-           $0279 = MoveRight
-           $0264 = MoveLeft
-           $028E = MoveUp
-           $02A3 = MoveDown
-           $0271 = MoveLeft.LeftScreen
-           $0286 = MoveRight.RightScreen
-           $029B = MoveUp.UpScreen
-           $02B0 = MoveDown.DownScreen
-           $02C6 = WaitForVBlank
-  SECTION: $02EC-$04EB ($0200 bytes)
-           $04EC = EndTiles
-           $04EC = Map
-           $02EC = TileLabel
-  SECTION: $04EC-$08EB ($0400 bytes)
-           $04EC = MapLabel
-  SECTION: $08EC-$0CEB ($0400 bytes)
-           $08EC = WindowLabel
-    SLACK: $3414 bytes
+           $02EA = StopLCD
+           $031E = Tiles
+           $030B = CopyMemory
+           $0301 = FillMemory
+           $0225 = StartScreen
+           $0200 = ReadPad
+           $02CF = UpdateTimer
+           $02D7 = HandleTimer
+           $0250 = Movement
+           $0315 = Delay
+           $01CA = start.GameLoop
+           $0289 = MoveRight
+           $0274 = MoveLeft
+           $029E = MoveUp
+           $02B3 = MoveDown
+           $0281 = MoveLeft.LeftScreen
+           $0296 = MoveRight.RightScreen
+           $02AB = MoveUp.UpScreen
+           $02C0 = MoveDown.DownScreen
+           $02E0 = HandleTimer.HandleBeat
+           $02F8 = WaitForVBlank
+  SECTION: $031E-$051D ($0200 bytes)
+           $051E = EndTiles
+           $051E = Map
+           $031E = TileLabel
+  SECTION: $051E-$091D ($0400 bytes)
+           $051E = MapLabel
+  SECTION: $091E-$0D1D ($0400 bytes)
+           $091E = WindowLabel
+    SLACK: $33E2 bytes
 
 BSS:
   EMPTY
