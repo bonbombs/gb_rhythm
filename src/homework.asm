@@ -218,10 +218,8 @@ start:
 	;call	UpdatePadTime
 	call 	UpdateTimer
 	call	HandleTimer
-	call 	Movement
 	call 	MoveCircle
 	;call	Collision
-	;call	DoMovement
 	
 	; Wait until we are in VBlank
 .wait
@@ -378,7 +376,7 @@ MoveCircle:
 ;	call	nz, MoveDown
 ;	ret
 
-;MoveLeft:
+MoveLeft:
 	ld		a, [circle0X]
 	cp		a, 24
 	jp		z, .Stop
@@ -489,8 +487,8 @@ HandleTimer:
 .HandleBeat:
 	ld		a, 0
 	ld		[timer], a
-	;call	functions here
-	call	MoveLeft
+	;call	functions to call on beat here
+	;call	MoveLeft
 	;call	.MetronomeBeat
 	ret
 
