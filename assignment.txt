@@ -1,0 +1,31 @@
+1. Assemble the base project (src/homework.asm) by following the instructions in readme.txt. Rename it from homework.asm to something unique.
+
+2. Generate and import the tile and map files
+	a. The data files for the example already exist. You simply need to export them. However, the directory path for them is baked into the .gbr and .gbm files, so you'
+	
+	b. Uncomment the import and memory-copying code in src/homework.asm.
+	
+	c. Run the project and make sure you see the character and the map
+
+3. Create some new tiles and update the maps. You should have a custom splash screen. 	
+	
+4. Add collision detection code so that the player cannot travel over certain background tiles.
+
+	a. A good plan is to modify Movement to store the player's future position to another variable. Then Collision will map that new position to a tile address, and lookup the tile value in that and the adjacent tiles (x,y : x+1,y : x,y+1 : x+1,y+1). Then, afterwards, if there are no collisions, actually perform the movement in DoMovement.
+
+5. Add two (2) additional features of your choice to your game.
+
+	a. Example features include:
+		AI controlled characters
+		Interactions with the world (ex. buttons, doors, keys, etc.)
+		Jumping or other forms of character movement
+		Sound effects on collision or other event
+		Sprite animations
+		UI elements, such as a score or health display
+		Visual effects
+		
+	b. Additional features should be small and take advantage of the hardware, not work against it. Save the big efforts for after the class. If you have extra time, add more features. The goal is to come away with an interesting demo, and the more impressive it is, the better.
+
+6. Email me an archive of your /src, /inc, and /obj directories, as well as your map, tiles, and window files. Only include the files which are relevant. Make sure your source code is commented and readable. The archive should be named "<name of your game>_<your initials>". The assignment is due by 23:59 on Wednesday night.
+
+7. Be prepared to have us read through your code and show your game in class and be ready to explain your approach.

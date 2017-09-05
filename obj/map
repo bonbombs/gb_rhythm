@@ -1,0 +1,40 @@
+Bank #0 (HOME):
+  SECTION: $0100-$02EB ($01EC bytes)
+           $0150 = start
+           $02B8 = StopLCD
+           $02EC = Tiles
+           $02D9 = CopyMemory
+           $02CF = FillMemory
+           $0215 = StartScreen
+           $01F0 = ReadPad
+           $0240 = Movement
+           $02E3 = Delay
+           $01C0 = start.GameLoop
+           $0279 = MoveRight
+           $0264 = MoveLeft
+           $028E = MoveUp
+           $02A3 = MoveDown
+           $0271 = MoveLeft.LeftScreen
+           $0286 = MoveRight.RightScreen
+           $029B = MoveUp.UpScreen
+           $02B0 = MoveDown.DownScreen
+           $02C6 = WaitForVBlank
+  SECTION: $02EC-$04EB ($0200 bytes)
+           $04EC = EndTiles
+           $04EC = Map
+           $02EC = TileLabel
+  SECTION: $04EC-$08EB ($0400 bytes)
+           $04EC = MapLabel
+  SECTION: $08EC-$0CEB ($0400 bytes)
+           $08EC = WindowLabel
+    SLACK: $3414 bytes
+
+BSS:
+  EMPTY
+
+VRAM:
+  EMPTY
+
+HRAM:
+  EMPTY
+

@@ -1,0 +1,3 @@
+INCLUDE "gbhw.inc"
+
+_LCD_ON_SETTINGS EQU LCDCF_ON|
