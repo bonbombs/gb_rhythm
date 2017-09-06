@@ -80,6 +80,91 @@ _RAM_BLOCK_2	EQU		_RAM+256
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;CARTRIDGE HEADER
 
+; ****************************************************************************************
+; LOAD RAW AUDIO 4 BIT SAMPLES IN UPPER 16K OF 32K CARTRIDGE
+; **************************************************************************************** 
+SECTION "raw-audio",CODE[$4000]
+AUDIOBYTES	EQU	9130
+AUDIOLEN	EQU	AUDIOBYTES/16
+RAWAUDIO:
+ 		db	AUDIOLEN-((AUDIOLEN/256)*256) 	; LOW BYTE
+		db	AUDIOLEN/256			; HIGH BYTE
+		INCBIN 	"TEST8BIT.GBW"
+
+		IF      !DEF(SAMPLE1_ASM)
+SAMPLE1_ASM  SET  1
+
+snd_Sample1::
+        ld      a,[hl+]         ;get sample length
+        ld      c,a
+        ld      a,[hl+]
+        ld      b,a
+
+        ld      a,$84
+        ldh     [rNR52],a      ;enable sound 3
+
+        ld      a,0
+        ldh     [rNR30],a
+        ldh     [rNR51],a
+
+        ld      a,$77
+        ldh     [rNR50],a       ;select speakers
+        ld      a,$ff
+        ldh     [rNR51],a       ;enable sound 3
+
+        ld      a,$40
+        ldh     [rNR31],a       ;sound length
+        ld      a,$20
+        ldh     [rNR32],a       ;sound level high
+
+        ld      a,$00
+        ldh     [rNR33],a       ;sound freq low
+
+.samp2:
+        ld      de,_AUD3WAVERAM ;12
+        push    bc              ;16
+        ld      b,16            ;16
+
+        xor     a
+        ldh     [rNR30],a
+.samp3:
+        ld      a,[hl+]         ;8
+        ld      [de],a          ;8
+        inc     de              ;8
+        dec     b               ;4
+        jr      nz,.samp3       ;12
+
+        ld      a,$80
+        ldh     [rNR30],a
+
+        ld      a,$87           ; (256hz)
+        ldh     [rNR34],a
+
+
+        ld      bc,558          ;delay routine
+.samp4:
+        dec     bc              ;8
+        ld      a,b             ;4
+        or      c               ;4
+        jr      nz,.samp4       ;12
+
+        ld      a,0             ;more delay
+        ld      a,0
+        ld      a,0
+
+        pop     bc              ;12
+        dec     bc              ;8
+        ld      a,b             ;4
+        or      c               ;4
+        jr      nz,.samp2       ;12
+
+        ld      a,$bb
+        ldh     [rNR51],a       ;disable sound 3
+
+        ret
+
+        ENDC    ;sample1_asm
+
 ; Program Begins
 SECTION "start", HOME[$0100]	; location to begin memory (< $0100 is saved for interupts)
 								; HOME is memory bank 0
@@ -197,6 +282,33 @@ start:
 	; configure and activate LCD (see gbhw.inc line 70-85)
 	ld		a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON|LCDCF_WIN9C00
 	ld		[rLCDC], a
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; Sound definition
+        ld      a,[hl+]         ;get sample length
+        ld      c,a
+        ld      a,[hl+]
+        ld      b,a
+
+        ld      a,$84
+        ldh      [rNR52],a      ;enable sound 3
+
+        ld      a,0
+        ldh     [rNR30],a
+        ldh     [rNR51],a
+
+        ld      a,$77
+        ldh     [rNR50],a       ;select speakers
+        ld      a,$ff
+        ldh     [rNR51],a       ;enable sound 3
+
+        ld      a,$80
+        ldh     [rNR31],a       ;sound length
+        ld      a,$20
+        ldh     [rNR32],a       ;sound level high
+
+        ld      a,$00
+        ldh     [rNR33],a       ;sound freq low
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Gameplay loop
@@ -339,7 +451,7 @@ MoveCircle:
 ;	ld		a, [padInput]	; load status of pad
 ;	ld		b, a			; Save in b so we can reset easily
 
-;	cp		0				; Return if we have no input
+;	cp		0				; Return if we have no input0
 ;	jr		nz, .CheckMovement
 ;	ret
 
@@ -385,6 +497,16 @@ MoveCircle:
 	ret
 	
 .Stop
+	ld		hl, RAWAUDIO
+ 	call	snd_Sample1
+	ld		a, 128			; staring x postion for sprite, resets to other end of the screen
+	ld		[circle0X], a
+	ld		a, 136			
+	ld		[circle1X], a
+	ld		a, 128			
+	ld		[circle2X], a
+	ld		a, 136			
+	ld		[circle3X], a
 	ret
 ;.LeftPlayer:
 ;	dec		a
