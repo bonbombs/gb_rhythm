@@ -4,6 +4,7 @@ Bank #0 (HOME):
            $0307 = StopLCD
            $033B = Tiles
            $0328 = CopyMemory
+<<<<<<< HEAD
            $02B8 = ShowScore
            $02C5 = ScoreEnd
            $031E = FillMemory
@@ -16,6 +17,15 @@ Bank #0 (HOME):
            $0218 = start.GameLoop
            $02E7 = MoveLeft.Stop
            $0300 = HandleTimer.HandleBeat
+=======
+           $031E = FillMemory
+           $029F = StartScreen
+           $027A = ReadPad
+           $02CA = MoveCircle
+           $0332 = Delay
+           $0230 = start.GameLoop
+           $02EC = MoveCircle.Stop
+>>>>>>> origin/LeoBranch
            $0315 = WaitForVBlank
   SECTION: $033B-$053A ($0200 bytes)
            $053B = EndTiles
@@ -26,6 +36,15 @@ Bank #0 (HOME):
   SECTION: $093B-$0D3A ($0400 bytes)
            $093B = WindowLabel
     SLACK: $33C5 bytes
+<<<<<<< HEAD
+=======
+
+Bank #1:
+  SECTION: $4000-$6411 ($2412 bytes)
+           $4000 = RAWAUDIO
+           $63AC = snd_Sample1
+    SLACK: $1BEE bytes
+>>>>>>> origin/LeoBranch
 
 BSS:
   EMPTY
