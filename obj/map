@@ -1,30 +1,31 @@
 Bank #0 (HOME):
-  SECTION: $0100-$0330 ($0231 bytes)
+  SECTION: $0100-$033A ($023B bytes)
            $0150 = start
-           $02FD = StopLCD
-           $0331 = Tiles
-           $031E = CopyMemory
-           $0314 = FillMemory
+           $0307 = StopLCD
+           $033B = Tiles
+           $0328 = CopyMemory
+           $02B8 = ShowScore
+           $02C5 = ScoreEnd
+           $031E = FillMemory
            $028D = StartScreen
            $0268 = ReadPad
-           $02E2 = UpdateTimer
-           $02EA = HandleTimer
-           $02B8 = MoveCircle
-           $0328 = Delay
+           $02EF = UpdateTimer
+           $02F7 = HandleTimer
+           $02C5 = MoveCircle
+           $0332 = Delay
            $0218 = start.GameLoop
-           $02DA = MoveLeft.Stop
-           $02F3 = HandleTimer.HandleBeat
-           $02B8 = MoveLeft
-           $030B = WaitForVBlank
-  SECTION: $0331-$0530 ($0200 bytes)
-           $0531 = EndTiles
-           $0531 = Map
-           $0331 = TileLabel
-  SECTION: $0531-$0930 ($0400 bytes)
-           $0531 = MapLabel
-  SECTION: $0931-$0D30 ($0400 bytes)
-           $0931 = WindowLabel
-    SLACK: $33CF bytes
+           $02E7 = MoveLeft.Stop
+           $0300 = HandleTimer.HandleBeat
+           $0315 = WaitForVBlank
+  SECTION: $033B-$053A ($0200 bytes)
+           $053B = EndTiles
+           $053B = Map
+           $033B = TileLabel
+  SECTION: $053B-$093A ($0400 bytes)
+           $053B = MapLabel
+  SECTION: $093B-$0D3A ($0400 bytes)
+           $093B = WindowLabel
+    SLACK: $33C5 bytes
 
 BSS:
   EMPTY
