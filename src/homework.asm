@@ -18,7 +18,8 @@ _PAD_UP			EQU		%01000000
 _PAD_DOWN		EQU		%10000000
 
 _RHYTHM_OFFSET	EQU		%00001000	; 8 frames of rhythm offset
-
+_SCORE_NUM_MIN	EQU		14			; Tile number for Sprite 0
+_SCORE_NUM_MAX	EQU		23			; Tile number for Sprite 9
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; OAM Memory locations
 
@@ -46,6 +47,24 @@ _SPR3_X		EQU			_OAMRAM+13	; x position
 _SPR3_NUM	EQU			_OAMRAM+14	; tile number
 _SPR3_ATT	EQU			_OAMRAM+15	; sprite atttributes
 
+;Sprite 4 (score pos 0)
+_SCORE0_Y	EQU			_OAMRAM+16
+_SCORE0_X	EQU			_OAMRAM+17
+_SCORE0_NUM	EQU			_OAMRAM+18
+_SCORE0_ATT	EQU			_OAMRAM+19
+
+;Sprite 4 (pos 0)
+_SCORE1_Y	EQU			_OAMRAM+20
+_SCORE1_X	EQU			_OAMRAM+21
+_SCORE1_NUM	EQU			_OAMRAM+22
+_SCORE1_ATT	EQU			_OAMRAM+23
+
+;Sprite 4 (pos 0)
+_SCORE2_Y	EQU			_OAMRAM+24
+_SCORE2_X	EQU			_OAMRAM+25
+_SCORE2_NUM	EQU			_OAMRAM+26
+_SCORE2_ATT	EQU			_OAMRAM+27
+
 ; TODO: Sprites [1-39] go here as needed
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -69,6 +88,14 @@ screenY			EQU		_RAM_BLOCK_0+10		;camera y
 timer			EQU		_RAM_BLOCK_0+11		;global timer
 padTime			EQU		_RAM_BLOCK_0+12		;time at which padInput happened
 score			EQU		_RAM_BLOCK_0+13		;player score
+score0X			EQU		_RAM_BLOCK_0+14
+score0Y			EQU		_RAM_BLOCK_0+15
+score1X			EQU		_RAM_BLOCK_0+16
+score1Y			EQU		_RAM_BLOCK_0+17
+score2X			EQU		_RAM_BLOCK_0+18
+score2Y			EQU		_RAM_BLOCK_0+19
+
+
 ; TODO: Additional variables
 
 _RAM_BLOCK_1	EQU		_RAM+128
@@ -225,7 +252,7 @@ start:
 	call	CopyMemory
 	
 	; Load the window tile map
-	ld		hl, WindowLabel
+	ld		hl, Numbers
 	ld		de, _SCRN1		; map 1 location
 	ld		bc, 32*32		; screen size
 	call 	CopyMemory
@@ -283,6 +310,42 @@ start:
 	ld	[_SPR3_NUM], a	; load a into contents of _SPR3_NUM
 	ld	a, 16
 	ld	[_SPR3_ATT], a	; special attribute, pallet 1
+
+	; Score pos 0
+	ld	a, 16 			; starting position y
+	ld	[score0Y], a
+	ld	[_SCORE0_Y], a	; y position of sprite
+	ld	a, 8			; starting position x
+	ld	[score0X], a
+	ld	[_SCORE0_X], a	; x position of sprite
+	ld	a, 14			; select sprite
+	ld	[_SCORE0_NUM], a	; load a into contents of _SPR3_NUM
+	ld	a, 16
+	ld	[_SCORE0_ATT], a	; special attribute, pallet 1
+
+		; Score pos 1
+	ld	a, 16 			; starting position y
+	ld	[score1Y], a
+	ld	[_SCORE1_Y], a	; y position of sprite
+	ld	a, 16			; starting position x
+	ld	[score1X], a
+	ld	[_SCORE1_X], a	; x position of sprite
+	ld	a, 14			; select sprite
+	ld	[_SCORE1_NUM], a	; load a into contents of _SPR3_NUM
+	ld	a, 16
+	ld	[_SCORE1_ATT], a	; special attribute, pallet 1
+
+	; Score pos 2
+	ld	a, 16			; starting position y
+	ld	[score2Y], a
+	ld	[_SCORE2_Y], a	; y position of sprite
+	ld	a, 24			; starting position x
+	ld	[score2X], a
+	ld	[_SCORE2_X], a	; x position of sprite
+	ld	a, 14			; select sprite
+	ld	[_SCORE2_NUM], a	; load a into contents of _SPR3_NUM
+	ld	a, 16
+	ld	[_SCORE2_ATT], a	; special attribute, pallet 1
 	
 	; Configure the screen
 	ld 	a, 64
@@ -340,6 +403,7 @@ start:
 	call	HandleTimer
 	call 	MoveCircle
 	;call	Collision
+	;call	UpdateScore
 	
 	; Wait until we are in VBlank
 .wait
@@ -518,6 +582,7 @@ MoveLeft:
 	ret
 	
 .Stop
+	call	UpdateScore
 	ld		hl, RAWAUDIO
  	call	snd_Sample1
 	ld		a, 128			; starting x postion for sprite, resets to other end of the screen
@@ -626,6 +691,78 @@ HandleTimer:
 	; do sound stuff here
 	ret
 
+UpdateScore:
+	ld	a, [score]		; Check if score == 255
+	cp	9
+	jp	z, .EndUpdateScore
+
+	ld	a,	[score]
+	inc a				; Increment score
+	ld	[score], a
+
+; 	ld	a, [score]		; Prepare to 
+; 	ld	d, a
+; 	ld	e, 100			; score / 100
+; 	call Divide
+; 	ld	c, a			; Put remainder in c
+; 	ld	a, 0			; Reset A
+; 	cp	d				; Is quotient == 0?
+; 	jp	z, .Update100s	; Skip to divide by 10 then
+; 	ld	a, [_SCORE0_NUM]	; Otherwise, update counter
+; 	cp	_SCORE_NUM_MAX	; If we're at 9, then reset to 0
+; 	jp	z, .ResetToZero10s
+; 	inc	a				; Else increment and jump to update
+; 	jp	.UpdateScore100s
+; .ResetToZero100s
+; 	ld	a, _SCORE_NUM_MIN
+; .UpdateScore100s
+; 		ld	[_SCORE0_NUM], a 
+; .Update10s
+; 	ld	d, c
+; 	ld	e, 10
+; 	call Divide
+; 	ld	c, a			; Put remainder in c
+; 	ld	a, 0			; Reset A
+; 	cp	d				; Is quotient == 0?
+; 	jp	z, .Update1s	; Skip to divide by 1 then
+; 	ld	a, [_SCORE1_NUM]	; Otherwise, update counter
+; 	cp	_SCORE_NUM_MAX	; If we're at 9, then reset to 0
+; 	jp	z, .ResetToZero10s
+; 	inc	a				; Else increment and jump to update
+; 	jp	.UpdateScore10s
+; 	.ResetToZero10s
+; 		ld	a, _SCORE_NUM_MIN
+; 	.UpdateScore10s
+; 		ld	[_SCORE1_NUM], a 
+.Update1s	
+	ld	a, [_SCORE2_NUM]
+	cp	_SCORE_NUM_MAX	; If we're at 9, then reset to 0
+	jp	z, .ResetToZero1s
+	inc	a				; Else increment and jump to update
+	jp	.UpdateScore1s
+.ResetToZero1s
+		ld	a, _SCORE_NUM_MIN
+.UpdateScore1s
+		ld	[_SCORE2_NUM], a 
+.EndUpdateScore
+	ret
+
+; ; Divide d by e. Puts quotient in d and remainder in a
+; Divide:
+; 	xor	a
+; 	ld	b, 8
+; .DivLoop:
+; 	sla	d
+; 	cp	e
+; 	jr	c, .EndLoop
+; 	sub	e
+; 	inc	d
+; 	.EndLoop
+; 	dec b
+; 	cp	z
+; 	djnz	.DivLoop
+; 	ret
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Wait until end of frame, then stop the LCD
 StopLCD:
@@ -698,7 +835,7 @@ Delay:
 
 .EndDelay:
 	ret
-	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Included tiles, maps and windows
 

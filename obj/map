@@ -1,50 +1,40 @@
 Bank #0 (HOME):
-  SECTION: $0100-$033A ($023B bytes)
+  SECTION: $0100-$03DB ($02DC bytes)
            $0150 = start
-           $0307 = StopLCD
-           $033B = Tiles
-           $0328 = CopyMemory
-<<<<<<< HEAD
-           $02B8 = ShowScore
-           $02C5 = ScoreEnd
-           $031E = FillMemory
-           $028D = StartScreen
-           $0268 = ReadPad
-           $02EF = UpdateTimer
-           $02F7 = HandleTimer
-           $02C5 = MoveCircle
-           $0332 = Delay
-           $0218 = start.GameLoop
-           $02E7 = MoveLeft.Stop
-           $0300 = HandleTimer.HandleBeat
-=======
-           $031E = FillMemory
-           $029F = StartScreen
-           $027A = ReadPad
-           $02CA = MoveCircle
-           $0332 = Delay
-           $0230 = start.GameLoop
-           $02EC = MoveCircle.Stop
->>>>>>> origin/LeoBranch
-           $0315 = WaitForVBlank
-  SECTION: $033B-$053A ($0200 bytes)
-           $053B = EndTiles
-           $053B = Map
-           $033B = TileLabel
-  SECTION: $053B-$093A ($0400 bytes)
-           $053B = MapLabel
-  SECTION: $093B-$0D3A ($0400 bytes)
-           $093B = WindowLabel
-    SLACK: $33C5 bytes
-<<<<<<< HEAD
-=======
+           $03A8 = StopLCD
+           $03DC = Tiles
+           $03C9 = CopyMemory
+           $03BF = FillMemory
+           $02FD = StartScreen
+           $02D8 = ReadPad
+           $036F = UpdateTimer
+           $0377 = HandleTimer
+           $0328 = MoveCircle
+           $03D3 = Delay
+           $0288 = start.GameLoop
+           $034A = MoveLeft.Stop
+           $0387 = UpdateScore
+           $0380 = HandleTimer.HandleBeat
+           $03A7 = UpdateScore.EndUpdateScore
+           $03A2 = UpdateScore.ResetToZero1s
+           $03A4 = UpdateScore.UpdateScore1s
+           $03B6 = WaitForVBlank
+  SECTION: $03DC-$055B ($0180 bytes)
+           $055C = EndTiles
+           $055C = Map
+           $04BC = Numbers
+           $03DC = TileLabel
+  SECTION: $055C-$095B ($0400 bytes)
+           $055C = MapLabel
+  SECTION: $095C-$0D5B ($0400 bytes)
+           $095C = WindowLabel
+    SLACK: $33A4 bytes
 
 Bank #1:
-  SECTION: $4000-$6411 ($2412 bytes)
+  SECTION: $4000-$63FD ($23FE bytes)
            $4000 = RAWAUDIO
            $63AC = snd_Sample1
-    SLACK: $1BEE bytes
->>>>>>> origin/LeoBranch
+    SLACK: $1C02 bytes
 
 BSS:
   EMPTY
