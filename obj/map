@@ -23,10 +23,10 @@ Bank #0 (HOME):
     SLACK: $33C5 bytes
 
 Bank #1:
-  SECTION: $4000-$6401 ($2402 bytes)
+  SECTION: $4000-$6411 ($2412 bytes)
            $4000 = RAWAUDIO
            $63AC = snd_Sample1
-    SLACK: $1BFE bytes
+    SLACK: $1BEE bytes
 
 BSS:
   EMPTY

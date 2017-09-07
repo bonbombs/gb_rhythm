@@ -91,10 +91,19 @@ RAWAUDIO:
 		db	AUDIOLEN/256			; HIGH BYTE
 		INCBIN 	"TEST8BIT.GBW"
 
+;* snd_Sample1 -
+;*    Playback raw sound sample at HL at 8192Hz rate.
+;*
+;*      The first DW at HL defines the length of the sample
+;      in samples/32 or bytes/16. The format of the data at
+;*     HL following the DW is 4-bit samples, 2 samples per
+;*     byte, upper 4-bits played before lower 4 bits.
+
 		IF      !DEF(SAMPLE1_ASM)
 SAMPLE1_ASM  SET  1
 
 snd_Sample1::
+
         ld      a,[hl+]         ;get sample length
         ld      c,a
         ld      a,[hl+]
@@ -112,7 +121,7 @@ snd_Sample1::
         ld      a,$ff
         ldh     [rNR51],a       ;enable sound 3
 
-        ld      a,$40
+        ld      a,$83
         ldh     [rNR31],a       ;sound length
         ld      a,$20
         ldh     [rNR32],a       ;sound level high
@@ -276,8 +285,8 @@ start:
 	ld [rSCX], a
 	
 	ld	a, 64
-	ld	[screenY], a
-	ld [rSCY], a
+	ld  [screenY], a
+	ld  [rSCY], a
 	
 	; configure and activate LCD (see gbhw.inc line 70-85)
 	ld		a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON|LCDCF_WIN9C00
@@ -499,7 +508,7 @@ MoveCircle:
 .Stop
 	ld		hl, RAWAUDIO
  	call	snd_Sample1
-	ld		a, 128			; staring x postion for sprite, resets to other end of the screen
+	ld		a, 128			; starting x postion for sprite, resets to other end of the screen
 	ld		[circle0X], a
 	ld		a, 136			
 	ld		[circle1X], a
