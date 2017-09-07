@@ -1,4 +1,4 @@
-; MAP.INC
+; NEWMAP.INC
 ;
 ; Map Include File.
 ;
@@ -20,4 +20,4 @@ MapLabelBank   EQU 0
 
  GLOBAL MapLabel
 
-; End of MAP.INC
+; End of NEWMAP.INC
